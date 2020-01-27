@@ -98,10 +98,45 @@ public:
     C getCents() const { return m_cents; }
     static C max_cents = 100;
 
+    Price<D, C>& operator+=(const Price<D, C>& other);
+    Price<D, C>& operator-=(const Price<D, C>& other);
+    Price<D, C>& operator*=(const Price<D, C>& other);
+    Price<D, C>& operator/=(const Price<D, C>& other);
+    Price<D, C>& operator%=(const Price<D, C>& other);
+
 private:
     D m_dollars;
     C m_cents;
 };
 
+template <class D, class C>
+Price<D, C>& Price<D, C>::operator+=(const Price<D, C>& other){
+    *this = *this + other;
+    return *this;
+}
+
+template <class D, class C>
+Price<D, C>& Price<D, C>::operator-=(const Price<D, C>& other){
+    *this = *this - other;
+    return *this;
+}
+
+template <class D, class C>
+Price<D, C>& Price<D, C>::operator*=(const Price<D, C>& other){
+    *this = *this * other;
+    return *this;
+}
+
+template <class D, class C>
+Price<D, C>& Price<D, C>::operator/=(const Price<D, C>& other){
+    *this = *this / other;
+    return *this;
+}
+
+template <class D, class C>
+Price<D, C>& Price<D, C>::operator%=(const Price<D, C>& other){
+    *this = *this % other;
+    return *this;
+}
 
 #endif //FIXEDPOINTPRICE_PRICE_H
