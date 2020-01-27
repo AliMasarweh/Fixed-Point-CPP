@@ -9,21 +9,21 @@ template <class D, class C>
 class Price;
 
 template <class D, class C>
-Price<D,C>& operator+(const Price<D,C>& p1, const Price<D,C>& p2)
+Price<D,C> operator+(const Price<D,C>& p1, const Price<D,C>& p2)
 {
     return Price<D,C>(p1.getDollars()+ p2.getDollars(),
             p1.getCents() + p2.getCents());
 }
 
 template <class D, class C>
-Price<D,C>& operator-(const Price<D,C>& p1, const Price<D,C>& p2)
+Price<D,C> operator-(const Price<D,C>& p1, const Price<D,C>& p2)
 {
     return Price<D,C>(p1.getDollars()- p2.getDollars(),
                       p1.getCents() - p2.getCents());
 }
 
 template <class D, class C>
-Price<D,C>& operator*(const Price<D,C>& p1, const Price<D,C>& p2)
+Price<D,C> operator*(const Price<D,C>& p1, const Price<D,C>& p2)
 {
     D d_p1 = p1.getDollars(), d_p2 = p2.getDollars();
     C c_p1 = p1.getCents(), c_p2 = p2.getCents();
@@ -33,7 +33,7 @@ Price<D,C>& operator*(const Price<D,C>& p1, const Price<D,C>& p2)
 }
 
 template <class D, class C>
-Price<D,C>& operator/(const Price<D,C>& p1, const Price<D,C>& p2)
+Price<D,C> operator/(const Price<D,C>& p1, const Price<D,C>& p2)
 {
     D d_p1 = p1.getDollars(), d_p2 = p2.getDollars();
     C c_p1 = p1.getCents(), c_p2 = p2.getCents();
@@ -43,7 +43,7 @@ Price<D,C>& operator/(const Price<D,C>& p1, const Price<D,C>& p2)
 }
 
 template <class D, class C>
-Price<D,C>& operator%(const Price<D,C>& p1, const Price<D,C>& p2)
+Price<D,C> operator%(const Price<D,C>& p1, const Price<D,C>& p2)
 {
     D d_p1 = p1.getDollars(), d_p2 = p2.getDollars();
     C c_p1 = p1.getCents(), c_p2 = p2.getCents();

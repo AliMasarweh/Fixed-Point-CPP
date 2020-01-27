@@ -7,7 +7,7 @@ OBJS=$(SOURCES:.cpp=.o)
 
 #INC_DIR=../include
 CC=g++
-CFLAGS= -c -pedantic -Wall -Werror -Wconversion -ansi -o #-I$(INC_DIR)
+CFLAGS= -c -o #-pedantic -Wall -Werror -Wconversion -ansi #-I$(INC_DIR)
 CXXFLAGS=$(CFLAGS)
 LDFLAGS= -g
 LDLIBS = -lgtest -lgtest_main -pthread
