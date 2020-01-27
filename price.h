@@ -55,8 +55,12 @@ Price<D,C> operator%(const Price<D,C>& p1, const Price<D,C>& p2)
 template <class D, class C>
 bool operator<(const Price<D,C>& p1, const Price<D,C>& p2)
 {
-    return p1.getDollars() < p2.getDollars() ||
-           p1.getDollars() < p2.getDollars();
+    if (p1.getDollars() < p2.getDollars())
+        return true;
+    if (p1.getDollars() == p2.getDollars() &&
+            p1.getCents() < p2.getCents())
+        return true;
+    return false;
 }
 
 template <class D, class C>
@@ -89,11 +93,15 @@ bool operator>=(const Price<D,C>& p1, const Price<D,C>& p2)
     return !(p1 < p2);
 }
 
-
 template <class D, class C>
 class Price{
-    friend std::ostream& operator<<(std::ostream& os,
-            const Price<D, C>& p);
+    friend std::ostream &operator<<(std::ostream &os, const Price<D, C> &p) {
+        std::string padding = "";
+        if(p.m_cents < 10)
+            padding = "0";
+        os << p.m_dollars << '.' << padding << (int) p.m_cents << '$';
+        return os;
+    }
 
 public:
     Price(D dollars = 0, C cents = 0);
@@ -111,9 +119,9 @@ public:
 
     Price<D, C>& operator-();
     Price<D, C>& operator++();
-    Price<D, C>& operator++(int);
+    const Price<D, C>  operator++(int);
 
-    operator double() const;
+    explicit operator double() const;
 
 private:
     D m_dollars;
@@ -173,7 +181,7 @@ Price<D, C> &Price<D, C>::operator++() {
 }
 
 template<class D, class C>
-Price<D, C> &Price<D, C>::operator++(int) {
+const Price<D, C> Price<D, C>::operator++(int) {
     Price<D, C> tmp = *this;
     ++this->m_dollars;
     return tmp;
@@ -189,13 +197,6 @@ Price<D, C> &Price<D, C>::operator=(int dollars) {
     this->m_dollars = dollars;
     this->m_cents = 0;
     return *this;
-}
-
-template<class D, class C>
-std::ostream &operator<<(std::ostream &os,
-        const Price<D, C>& p) {
-    os << p.m_dollars << '.' << p.m_cents << '$';
-    return os;
 }
 
 #endif //FIXEDPOINTPRICE_PRICE_H
