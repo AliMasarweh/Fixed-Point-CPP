@@ -92,6 +92,9 @@ bool operator>=(const Price<D,C>& p1, const Price<D,C>& p2)
 
 template <class D, class C>
 class Price{
+    friend std::ostream& operator<<(std::ostream& os,
+            const Price<D, C>& p);
+
 public:
     explicit Price(D dollars = 0, C cents = 0);
     D getDollars() const { return m_dollars; }
@@ -183,6 +186,13 @@ Price<D, C> &Price<D, C>::operator=(int dollars) {
     this->m_dollars = dollars;
     this->m_cents = 0;
     return *this;
+}
+
+template<class D, class C>
+std::ostream &operator<<(std::ostream &os,
+        const Price<D, C>& p) {
+    os << p.m_dollars << '.' << p.m_cents << '$';
+    return os;
 }
 
 #endif //FIXEDPOINTPRICE_PRICE_H
