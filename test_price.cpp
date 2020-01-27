@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
 
 TEST(PriceBasicTests, DefaultPrice)
 {
-    Price<int, int> p;
+    Price<int, char> p();
     stringstream ss;
     ASSERT_EQ(p, 0.00);
     ss << p;
@@ -23,7 +23,8 @@ TEST(PriceBasicTests, DefaultPrice)
 
 TEST(PriceBasicTests, PriceWithoutCents)
 {
-    Price<int, int> p(10);
+    Price<int, char> p(10);
+    stringstream ss;
     ASSERT_EQ(p, 10);
     ss << p;
     ASSERT_EQ(ss.str(), "10.00");
@@ -31,7 +32,8 @@ TEST(PriceBasicTests, PriceWithoutCents)
 
 TEST(PriceBasicTests, PriceWithCents)
 {
-    Price<int, int> p(10, 90);
+    Price<int, char> p(10, 90);
+    stringstream ss;
     ASSERT_EQ(p, 10.9);
     ss << p;
     ASSERT_EQ(ss.str(), "10.90");
@@ -39,7 +41,7 @@ TEST(PriceBasicTests, PriceWithCents)
 
 TEST(PriceBasicOperatorsTests, PriceArthimiticsWithAssigning)
 {
-    Price<int, int> p;
+    Price<int, char> p;
     ASSERT_EQ(p++, 0.0);
     ASSERT_EQ(++p, 2.0);
     ASSERT_EQ(p += 2, 4.0);
@@ -51,8 +53,9 @@ TEST(PriceBasicOperatorsTests, PriceArthimiticsWithAssigning)
 
 TEST(PriceBasicOperatorsTests, PriceArthimiticsWithoutAssigning)
 {
-    Price<int, int> p1(1);
-    Price<int, int> p2(2);
+    Price<int, char> p1(1);
+    Price<int, char> p2(2);
+    stringstream ss;
     ASSERT_EQ(p1 + 2, 1 + p2);
     ASSERT_EQ(p1 * 2, p2);
     ASSERT_EQ(p2 / 2, p2 - 1);
