@@ -104,10 +104,22 @@ public:
     Price<D, C>& operator/=(const Price<D, C>& other);
     Price<D, C>& operator%=(const Price<D, C>& other);
 
+    Price<D, C>& operator-();
+    Price<D, C>& operator++();
+    Price<D, C>& operator++(int);
+
+    
+
 private:
     D m_dollars;
     C m_cents;
 };
+
+template<class D, class C>
+Price<D, C>::Price(D dollars, C cents) {
+    this->m_dollars = dollars + cents/max_cents;
+    this->m_cents = cents%max_cents;
+}
 
 template <class D, class C>
 Price<D, C>& Price<D, C>::operator+=(const Price<D, C>& other){
@@ -137,6 +149,26 @@ template <class D, class C>
 Price<D, C>& Price<D, C>::operator%=(const Price<D, C>& other){
     *this = *this % other;
     return *this;
+}
+
+template<class D, class C>
+Price<D, C> &Price<D, C>::operator-() {
+    this->m_cents *= -1;
+    this->m_dollars *= -1;
+    return *this;
+}
+
+template<class D, class C>
+Price<D, C> &Price<D, C>::operator++() {
+    ++this->m_dollars;
+    return *this;
+}
+
+template<class D, class C>
+Price<D, C> &Price<D, C>::operator++(int) {
+    Price<D, C> tmp = *this;
+    ++this->m_dollars;
+    return tmp;
 }
 
 #endif //FIXEDPOINTPRICE_PRICE_H
