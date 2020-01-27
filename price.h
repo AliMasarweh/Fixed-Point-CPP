@@ -96,10 +96,10 @@ class Price{
             const Price<D, C>& p);
 
 public:
-    explicit Price(D dollars = 0, C cents = 0);
+    Price(D dollars = 0, C cents = 0);
     D getDollars() const { return m_dollars; }
     C getCents() const { return m_cents; }
-    static C max_cents = 100;
+    static unsigned char max_cents;
 
     Price<D, C>& operator=(int);
 
@@ -119,6 +119,9 @@ private:
     D m_dollars;
     C m_cents;
 };
+
+template<class D, class C>
+unsigned char Price<D, C>::max_cents = 99;
 
 template<class D, class C>
 Price<D, C>::Price(D dollars, C cents) {
