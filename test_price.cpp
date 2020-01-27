@@ -2,6 +2,7 @@
 // Created by ali-masa on 1/27/20.
 //
 #include <gtest/gtest.h>
+#include "price.h"
 
 using namespace std;
 
@@ -13,7 +14,7 @@ int main(int argc, char* argv[])
 
 TEST(PriceBasicTests, DefaultPrice)
 {
-    Price p;
+    Price<int, int> p;
     stringstream ss;
     ASSERT_EQ(p, 0.00);
     ss << p;
@@ -22,7 +23,7 @@ TEST(PriceBasicTests, DefaultPrice)
 
 TEST(PriceBasicTests, PriceWithoutCents)
 {
-    Price p(10);
+    Price<int, int> p(10);
     ASSERT_EQ(p, 10);
     ss << p;
     ASSERT_EQ(ss.str(), "10.00");
@@ -30,7 +31,7 @@ TEST(PriceBasicTests, PriceWithoutCents)
 
 TEST(PriceBasicTests, PriceWithCents)
 {
-    Price p(10, 90);
+    Price<int, int> p(10, 90);
     ASSERT_EQ(p, 10.9);
     ss << p;
     ASSERT_EQ(ss.str(), "10.90");
@@ -38,7 +39,7 @@ TEST(PriceBasicTests, PriceWithCents)
 
 TEST(PriceBasicOperatorsTests, PriceArthimiticsWithAssigning)
 {
-    Price p;
+    Price<int, int> p;
     ASSERT_EQ(p++, 0.0);
     ASSERT_EQ(++p, 2.0);
     ASSERT_EQ(p += 2, 4.0);
@@ -50,8 +51,8 @@ TEST(PriceBasicOperatorsTests, PriceArthimiticsWithAssigning)
 
 TEST(PriceBasicOperatorsTests, PriceArthimiticsWithoutAssigning)
 {
-    Price p1(1);
-    Price p2(2);
+    Price<int, int> p1(1);
+    Price<int, int> p2(2);
     ASSERT_EQ(p1 + 2, 1 + p2);
     ASSERT_EQ(p1 * 2, p2);
     ASSERT_EQ(p2 / 2, p2 - 1);
