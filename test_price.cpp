@@ -13,7 +13,7 @@ int main(int argc, char* argv[])
 
 TEST(PriceBasicTests, DefaultPrice)
 {
-    Price p();
+    Price p;
     stringstream ss;
     ASSERT_EQ(p, 0.00);
     ss << p;
@@ -34,4 +34,25 @@ TEST(PriceBasicTests, PriceWithCents)
     ASSERT_EQ(p, 10.9);
     ss << p;
     ASSERT_EQ(ss.str(), "10.90");
+}
+
+TEST(PriceBasicOperatorsTests, PriceArthimiticsWithAssigning)
+{
+    Price p;
+    ASSERT_EQ(p++, 0.0);
+    ASSERT_EQ(++p, 2.0);
+    ASSERT_EQ(p += 2, 4.0);
+    ASSERT_EQ(p *= 2, 8.0);
+    ASSERT_EQ(p /= 2, 4.0);
+    ASSERT_EQ(p -= 2, 2.0);
+    ASSERT_EQ(p %= 2, 0.0);
+}
+
+TEST(PriceBasicOperatorsTests, PriceArthimiticsWithoutAssigning)
+{
+    Price p1(1);
+    Price p2(2);
+    ASSERT_EQ(p1 + 2, 1 + p2);
+    ASSERT_EQ(p1 * 2, p2);
+    ASSERT_EQ(p2 / 2, p2 - 1);
 }
