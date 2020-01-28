@@ -59,6 +59,22 @@ TEST(PriceBasicOperatorsTests, PriceArthimiticsWithoutAssigning)
     ASSERT_EQ(p2 / (Price<int, char, 2>(2)), p2 - (Price<int, char, 2>(1)));
 }
 
+TEST(PriceAdvancedOperatorsTests, PriceBigNumberMultiplications)
+{
+    unsigned long long bigNumber = 3 * pow(10, 9);
+    Price<unsigned long long, char, 2> p1(bigNumber);
+    Price<unsigned long long, char, 2> p2(bigNumber);
+
+    stringstream ss;
+    ss << (p1*p2);
+
+    unsigned long long bigNumbersMulResult = 9 * pow(10, 18);
+
+    stringstream ss2;
+    ss2 << bigNumbersMulResult << "$";
+    ASSERT_EQ(ss.str(), ss2.str());
+}
+
 TEST(PriceAdvancedOperatorsTests, PriceDivisionAccuracy)
 {
     Price<int, int, 8> p1(22);
