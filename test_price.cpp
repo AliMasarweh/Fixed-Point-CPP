@@ -116,3 +116,23 @@ TEST(FixedPointAdvancedOperatorsTests, FixedPointDivisionAccuracy)
 
     ASSERT_EQ(ss.str(), "3.1428571428$");
 }
+
+TEST(FixedPointMakeMoney, FixedPointMakeMoneyBasic)
+{
+    FixedPoint<2> p1(22, 16);
+    FixedPoint<2> p2(1946, 46);
+    FixedPoint<2> p3(119194, 78);
+    FixedPoint<2> p4(2772, 18);
+    FixedPoint<2> p5(0, 64);
+    FixedPoint<2> p6(124495169, 27);
+    FixedPoint<2> p7(2020495169, 27);
+
+    ASSERT_EQ(p1.makeMoney(), "twenty two dollars and sixteen cents");
+    ASSERT_EQ(p2.makeMoney(), "one thousand nine hundred, fourty six dollars and fourty six cents");
+    ASSERT_EQ(p3.makeMoney(), "one hundrend nineteen thousand one hundred, ninety four dollars and seventy eight cents");
+    ASSERT_EQ(p4.makeMoney(), "two thousand seven hundred, seventy two dollars and eighteen cents");
+    ASSERT_EQ(p5.makeMoney(), "sixty four cents");
+    cout << p6 << endl;
+    ASSERT_EQ(p6.makeMoney(),"one hundrend twenty four million, four hunderend ninty five, one hundrend and sixty nine");
+
+}
