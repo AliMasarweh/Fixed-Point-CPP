@@ -14,47 +14,47 @@ int main(int argc, char* argv[])
 
 TEST(PriceBasicTests, DefaultPrice)
 {
-    Price<int, char> p;
+    Price<int, char, 2> p;
     stringstream ss;
-    ASSERT_EQ(p, (Price<int, char>(0, 0)));
+    ASSERT_EQ(p, (Price<int, char, 2>(0, 0)));
     ss << p;
     ASSERT_EQ(ss.str(), "0.00$");
 }
 
 TEST(PriceBasicTests, PriceWithoutCents)
 {
-    Price<int, char> p(10);
+    Price<int, char, 2> p(10);
     stringstream ss;
-    ASSERT_EQ(p, (Price<int, char>(10, 0)));
+    ASSERT_EQ(p, (Price<int, char, 2>(10, 0)));
     ss << p;
     ASSERT_EQ(ss.str(), "10.00$");
 }
 
 TEST(PriceBasicTests, PriceWithCents)
 {
-    Price<int, char> p(10, 90);
+    Price<int, char, 2> p(10, 90);
     stringstream ss;
-    ASSERT_EQ(p, (Price<int, char>(10, 90)));
+    ASSERT_EQ(p, (Price<int, char, 2>(10, 90)));
     ss << p;
     ASSERT_EQ(ss.str(), "10.90$");
 }
 
 TEST(PriceBasicOperatorsTests, PriceArthimiticsWithAssigning)
 {
-    Price<int, char> p;
-    ASSERT_EQ(p++, (Price<int, char>(0.0)));
-    ASSERT_EQ(++p, (Price<int, char>(2.0)));
-    ASSERT_EQ(p += (Price<int, char>(2)), (Price<int, char>(4.0)));
-    ASSERT_EQ(p *= (Price<int, char>(2)), (Price<int, char>(8.0)));
-    ASSERT_EQ(p /= (Price<int, char>(2)), (Price<int, char>(4.0)));
-    ASSERT_EQ(p -= (Price<int, char>(2)), (Price<int, char>(2.0)));
-    ASSERT_EQ(p %= (Price<int, char>(2)), (Price<int, char>(0.0)));
+    Price<int, char, 2> p;
+    ASSERT_EQ(p++, (Price<int, char, 2>(0.0)));
+    ASSERT_EQ(++p, (Price<int, char, 2>(2.0)));
+    ASSERT_EQ(p += (Price<int, char, 2>(2)), (Price<int, char, 2>(4.0)));
+    ASSERT_EQ(p *= (Price<int, char, 2>(2)), (Price<int, char, 2>(8.0)));
+    ASSERT_EQ(p /= (Price<int, char, 2>(2)), (Price<int, char, 2>(4.0)));
+    ASSERT_EQ(p -= (Price<int, char, 2>(2)), (Price<int, char, 2>(2.0)));
+    ASSERT_EQ(p %= (Price<int, char, 2>(2)), (Price<int, char, 2>(0.0)));
 }
 TEST(PriceBasicOperatorsTests, PriceArthimiticsWithoutAssigning)
 {
-    Price<int, char> p1(1);
-    Price<int, char> p2(2);
-    ASSERT_EQ(p1 + (Price<int, char>(2)), (Price<int, char>(1)) + p2);
-    ASSERT_EQ(p1 * (Price<int, char>(2)), p2);
-    ASSERT_EQ(p2 / (Price<int, char>(2)), p2 - (Price<int, char>(1)));
+    Price<int, char, 2> p1(1);
+    Price<int, char, 2> p2(2);
+    ASSERT_EQ(p1 + (Price<int, char, 2>(2)), (Price<int, char, 2>(1)) + p2);
+    ASSERT_EQ(p1 * (Price<int, char, 2>(2)), p2);
+    ASSERT_EQ(p2 / (Price<int, char, 2>(2)), p2 - (Price<int, char, 2>(1)));
 }
