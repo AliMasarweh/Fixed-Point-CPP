@@ -12,58 +12,58 @@ int main(int argc, char* argv[])
     return RUN_ALL_TESTS();
 }
 
-TEST(PriceBasicTests, DefaultPrice)
+TEST(FixedPointBasicTests, DefaultFixedPoint)
 {
-    Price<int, char, 2> p;
+    FixedPoint<int, char, 2> p;
     stringstream ss;
-    ASSERT_EQ(p, (Price<int, char, 2>(0, 0)));
+    ASSERT_EQ(p, (FixedPoint<int, char, 2>(0, 0)));
     ss << p;
     ASSERT_EQ(ss.str(), "0.00$");
 }
 
-TEST(PriceBasicTests, PriceWithoutCents)
+TEST(FixedPointBasicTests, FixedPointWithoutCents)
 {
-    Price<int, char, 2> p(10);
+    FixedPoint<int, char, 2> p(10);
     stringstream ss;
-    ASSERT_EQ(p, (Price<int, char, 2>(10, 0)));
+    ASSERT_EQ(p, (FixedPoint<int, char, 2>(10, 0)));
     ss << p;
     ASSERT_EQ(ss.str(), "10.00$");
 }
 
-TEST(PriceBasicTests, PriceWithCents)
+TEST(FixedPointBasicTests, FixedPointWithCents)
 {
-    Price<int, char, 2> p(10, 90);
+    FixedPoint<int, char, 2> p(10, 90);
     stringstream ss;
-    ASSERT_EQ(p, (Price<int, char, 2>(10, 90)));
+    ASSERT_EQ(p, (FixedPoint<int, char, 2>(10, 90)));
     ss << p;
     ASSERT_EQ(ss.str(), "10.90$");
 }
 
-TEST(PriceBasicOperatorsTests, PriceArthimiticsWithAssigning)
+TEST(FixedPointBasicOperatorsTests, FixedPointArthimiticsWithAssigning)
 {
-    Price<int, char, 2> p;
-    ASSERT_EQ(p++, (Price<int, char, 2>(0.0)));
-    ASSERT_EQ(++p, (Price<int, char, 2>(2.0)));
-    ASSERT_EQ(p += (Price<int, char, 2>(2)), (Price<int, char, 2>(4.0)));
-    ASSERT_EQ(p *= (Price<int, char, 2>(2)), (Price<int, char, 2>(8.0)));
-    ASSERT_EQ(p /= (Price<int, char, 2>(2)), (Price<int, char, 2>(4.0)));
-    ASSERT_EQ(p -= (Price<int, char, 2>(2)), (Price<int, char, 2>(2.0)));
-    ASSERT_EQ(p %= (Price<int, char, 2>(2)), (Price<int, char, 2>(0.0)));
+    FixedPoint<int, char, 2> p;
+    ASSERT_EQ(p++, (FixedPoint<int, char, 2>(0.0)));
+    ASSERT_EQ(++p, (FixedPoint<int, char, 2>(2.0)));
+    ASSERT_EQ(p += (FixedPoint<int, char, 2>(2)), (FixedPoint<int, char, 2>(4.0)));
+    ASSERT_EQ(p *= (FixedPoint<int, char, 2>(2)), (FixedPoint<int, char, 2>(8.0)));
+    ASSERT_EQ(p /= (FixedPoint<int, char, 2>(2)), (FixedPoint<int, char, 2>(4.0)));
+    ASSERT_EQ(p -= (FixedPoint<int, char, 2>(2)), (FixedPoint<int, char, 2>(2.0)));
+    ASSERT_EQ(p %= (FixedPoint<int, char, 2>(2)), (FixedPoint<int, char, 2>(0.0)));
 }
-TEST(PriceBasicOperatorsTests, PriceArthimiticsWithoutAssigning)
+TEST(FixedPointBasicOperatorsTests, FixedPointArthimiticsWithoutAssigning)
 {
-    Price<int, char, 2> p1(1);
-    Price<int, char, 2> p2(2);
-    ASSERT_EQ(p1 + (Price<int, char, 2>(2)), (Price<int, char, 2>(1)) + p2);
-    ASSERT_EQ(p1 * (Price<int, char, 2>(2)), p2);
-    ASSERT_EQ(p2 / (Price<int, char, 2>(2)), p2 - (Price<int, char, 2>(1)));
+    FixedPoint<int, char, 2> p1(1);
+    FixedPoint<int, char, 2> p2(2);
+    ASSERT_EQ(p1 + (FixedPoint<int, char, 2>(2)), (FixedPoint<int, char, 2>(1)) + p2);
+    ASSERT_EQ(p1 * (FixedPoint<int, char, 2>(2)), p2);
+    ASSERT_EQ(p2 / (FixedPoint<int, char, 2>(2)), p2 - (FixedPoint<int, char, 2>(1)));
 }
 
-TEST(PriceAdvancedOperatorsTests, PriceBigNumberMultiplications)
+TEST(FixedPointAdvancedOperatorsTests, FixedPointBigNumberMultiplications)
 {
     unsigned long long bigNumber = 3 * pow(10, 9);
-    Price<unsigned long long, char, 2> p1(bigNumber);
-    Price<unsigned long long, char, 2> p2(bigNumber);
+    FixedPoint<unsigned long long, char, 2> p1(bigNumber);
+    FixedPoint<unsigned long long, char, 2> p2(bigNumber);
 
     stringstream ss;
     ss << (p1*p2);
@@ -75,10 +75,10 @@ TEST(PriceAdvancedOperatorsTests, PriceBigNumberMultiplications)
     ASSERT_EQ(ss.str(), ss2.str());
 }
 
-TEST(PriceAdvancedOperatorsTests, PriceRealNumersMultiplications)
+TEST(FixedPointAdvancedOperatorsTests, FixedPointRealNumersMultiplications)
 {
-    Price<unsigned long long, long long, 2> p1(13491, 16);
-    Price<unsigned long long, long long, 2> p2(1674, 21);
+    FixedPoint<unsigned long long, long long, 2> p1(13491, 16);
+    FixedPoint<unsigned long long, long long, 2> p2(1674, 21);
 
     stringstream ss;
     ss << (p1*p2);
@@ -90,8 +90,8 @@ TEST(PriceAdvancedOperatorsTests, PriceRealNumersMultiplications)
     ss2 << completeNumbersMulResult << "." << afterCommaMulResult << "$";
     ASSERT_EQ(ss.str(), ss2.str());
 
-    Price<int, long long, 4> p3(0, 25);
-    Price<int, long long, 4> p4(0, 25);
+    FixedPoint<int, long long, 4> p3(0, 25);
+    FixedPoint<int, long long, 4> p4(0, 25);
 
     ss.clear();
     ss2.clear();
@@ -106,10 +106,10 @@ TEST(PriceAdvancedOperatorsTests, PriceRealNumersMultiplications)
 }
 
 
-TEST(PriceAdvancedOperatorsTests, PriceDivisionAccuracy)
+TEST(FixedPointAdvancedOperatorsTests, FixedPointDivisionAccuracy)
 {
-    Price<long, long, 10> p1(22);
-    Price<long, long, 10> p2(7);
+    FixedPoint<long, long, 10> p1(22);
+    FixedPoint<long, long, 10> p2(7);
 
     stringstream ss;
     ss << (p1/p2);
