@@ -75,6 +75,22 @@ TEST(PriceAdvancedOperatorsTests, PriceBigNumberMultiplications)
     ASSERT_EQ(ss.str(), ss2.str());
 }
 
+TEST(PriceAdvancedOperatorsTests, PriceRealNumersMultiplications)
+{
+    Price<unsigned long long, long long, 2> p1(13491, 16);
+    Price<unsigned long long, long long, 2> p2(1674, 21);
+
+    stringstream ss;
+    ss << (p1*p2);
+
+    int completeNumbersMulResult = 22587034;
+    int afterCommaMulResult = 98;
+
+    stringstream ss2;
+    ss2 << completeNumbersMulResult << "." << afterCommaMulResult << "$";
+    ASSERT_EQ(ss.str(), ss2.str());
+}
+
 TEST(PriceAdvancedOperatorsTests, PriceDivisionAccuracy)
 {
     Price<long, long, 10> p1(22);
