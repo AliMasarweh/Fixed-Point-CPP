@@ -58,3 +58,14 @@ TEST(PriceBasicOperatorsTests, PriceArthimiticsWithoutAssigning)
     ASSERT_EQ(p1 * (Price<int, char, 2>(2)), p2);
     ASSERT_EQ(p2 / (Price<int, char, 2>(2)), p2 - (Price<int, char, 2>(1)));
 }
+
+TEST(PriceAdvancedOperatorsTests, PriceDivisionAccuracy)
+{
+    Price<int, int, 8> p1(22);
+    Price<int, int, 8> p2(7);
+
+    stringstream ss;
+    ss << (p1/p2);
+
+    ASSERT_EQ(ss.str(), "3.14285714$");
+}

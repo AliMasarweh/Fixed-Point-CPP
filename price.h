@@ -10,10 +10,16 @@
 template <class D, class C, unsigned char SIZE>
 class Price{
     friend std::ostream &operator<<(std::ostream &os, const Price<D, C, SIZE> &p) {
-        std::string padding = "";
-        if(p.m_cents < 10)
-            padding = "0";
-        os << p.m_dollars << '.' << padding << (int) p.m_cents << '$';
+        C tmpToPadZeros = p.m_cents != 0? p.m_cents : 1;
+
+        os << p.m_dollars << '.';
+
+        while(tmpToPadZeros < SIZE) {
+            os << "0";
+            tmpToPadZeros *= 10;
+        }
+
+        os << (D) p.m_cents << '$';
         return os;
     }
 
@@ -38,8 +44,8 @@ public:
 
     explicit operator double() const;
 
-    C m_maxCents;
-    
+    D m_maxCents;
+
 private:
     D m_dollars;
     C m_cents;
@@ -75,13 +81,21 @@ Price<D, C, SIZE> operator*(const Price<D, C, SIZE>& p1, const Price<D, C, SIZE>
 template <class D, class C, unsigned char SIZE>
 Price<D, C, SIZE> operator/(const Price<D, C, SIZE>& p1, const Price<D, C, SIZE>& p2)
 {
-    D d_p1 = p1.getDollars(), d_p2 = p2.getDollars();
+    long long d_p1 = p1.getDollars(), d_p2 = p2.getDollars();
     C c_p1 = p1.getCents(), c_p2 = p2.getCents();
 
-    long long total = ((d_p1 * p1.m_maxCents+c_p1) * p1.m_maxCents)
-            / (d_p2 *p2.m_maxCents+c_p2);
+    long long total = (((d_p1 * p1.m_maxCents+c_p1) * p1.m_maxCents)
+            / (d_p2 *p2.m_maxCents+c_p2));
+
     return Price<D, C, SIZE>(total / p1.m_maxCents,
-                      total % p1.m_maxCents);
+                             long(total) % p1.m_maxCents);
+
+    /*
+    long double total_p1 = (d_p1 * p1.m_maxCents+c_p1);
+    long double total_p2 = (d_p2 * p2.m_maxCents+c_p2);
+    long double total = total_p1 / total_p2;
+    return Price<D, C, SIZE>(floor(total),
+                             long(total*p1.m_maxCents)%p1.m_maxCents);*/
 }
 
 template <class D, class C, unsigned char SIZE>
