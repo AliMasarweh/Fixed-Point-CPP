@@ -7,9 +7,9 @@
 
 #include <cmath>
 
-template <class D, class C, unsigned char SIZE>
+template <unsigned char SIZE, class D, class C>
 class FixedPoint{
-    friend std::ostream &operator<<(std::ostream &os, const FixedPoint<D, C, SIZE> &p) {
+    friend std::ostream &operator<<(std::ostream &os, const FixedPoint<SIZE, D, C> &p) {
         C tmpToPadZeros = p.m_cents != 0? p.m_cents : 1;
 
         os << p.m_dollars << '.';
@@ -28,19 +28,19 @@ public:
     D getDollars() const { return m_dollars; }
     C getCents() const { return m_cents; }
 
-    FixedPoint<D, C, SIZE>& operator=(int);
+    FixedPoint<SIZE, D, C>& operator=(int);
 
-    FixedPoint<D, C, SIZE>& operator+=(const FixedPoint<D, C, SIZE>& other);
-    FixedPoint<D, C, SIZE>& operator-=(const FixedPoint<D, C, SIZE>& other);
-    FixedPoint<D, C, SIZE>& operator*=(const FixedPoint<D, C, SIZE>& other);
-    FixedPoint<D, C, SIZE>& operator/=(const FixedPoint<D, C, SIZE>& other);
-    FixedPoint<D, C, SIZE>& operator%=(const FixedPoint<D, C, SIZE>& other);
+    FixedPoint<SIZE, D, C>& operator+=(const FixedPoint<SIZE, D, C>& other);
+    FixedPoint<SIZE, D, C>& operator-=(const FixedPoint<SIZE, D, C>& other);
+    FixedPoint<SIZE, D, C>& operator*=(const FixedPoint<SIZE, D, C>& other);
+    FixedPoint<SIZE, D, C>& operator/=(const FixedPoint<SIZE, D, C>& other);
+    FixedPoint<SIZE, D, C>& operator%=(const FixedPoint<SIZE, D, C>& other);
 
-    FixedPoint<D, C, SIZE>& operator-();
-    FixedPoint<D, C, SIZE>& operator++();
-    const FixedPoint<D, C, SIZE>  operator++(int);
-    FixedPoint<D, C, SIZE>& operator--();
-    const FixedPoint<D, C, SIZE>  operator--(int);
+    FixedPoint<SIZE, D, C>& operator-();
+    FixedPoint<SIZE, D, C>& operator++();
+    const FixedPoint<SIZE, D, C>  operator++(int);
+    FixedPoint<SIZE, D, C>& operator--();
+    const FixedPoint<SIZE, D, C>  operator--(int);
 
     explicit operator double() const;
 
@@ -52,22 +52,22 @@ private:
 };
 
 
-template <class D, class C, unsigned char SIZE>
-FixedPoint<D, C, SIZE> operator+(const FixedPoint<D, C, SIZE>& p1, const FixedPoint<D, C, SIZE>& p2)
+template <unsigned char SIZE, class D, class C>
+FixedPoint<SIZE, D, C> operator+(const FixedPoint<SIZE, D, C>& p1, const FixedPoint<SIZE, D, C>& p2)
 {
-    return FixedPoint<D, C, SIZE>(p1.getDollars()+ p2.getDollars(),
+    return FixedPoint<SIZE, D, C>(p1.getDollars()+ p2.getDollars(),
                       p1.getCents() + p2.getCents());
 }
 
-template <class D, class C, unsigned char SIZE>
-FixedPoint<D, C, SIZE> operator-(const FixedPoint<D, C, SIZE>& p1, const FixedPoint<D, C, SIZE>& p2)
+template <unsigned char SIZE, class D, class C>
+FixedPoint<SIZE, D, C> operator-(const FixedPoint<SIZE, D, C>& p1, const FixedPoint<SIZE, D, C>& p2)
 {
-    return FixedPoint<D, C, SIZE>(p1.getDollars()- p2.getDollars(),
+    return FixedPoint<SIZE, D, C>(p1.getDollars()- p2.getDollars(),
                       p1.getCents() - p2.getCents());
 }
 
-template <class D, class C, unsigned char SIZE>
-FixedPoint<D, C, SIZE> operator*(const FixedPoint<D, C, SIZE>& p1, const FixedPoint<D, C, SIZE>& p2)
+template <unsigned char SIZE, class D, class C>
+FixedPoint<SIZE, D, C> operator*(const FixedPoint<SIZE, D, C>& p1, const FixedPoint<SIZE, D, C>& p2)
 {
     C maxCents = p1.m_maxCents;
     long long d_p1 = p1.getDollars(), d_p2 = p2.getDollars();
@@ -79,41 +79,41 @@ FixedPoint<D, C, SIZE> operator*(const FixedPoint<D, C, SIZE>& p1, const FixedPo
 
     long long cents = static_cast<long long>((c_p1 * c_p2)/maxCents + d_p1 * c_p2 + d_p2 * c_p1);
     std::cout << dollars << " " << cents << std::endl;
-    return FixedPoint<D, C, SIZE>((D)dollars, (C)cents);
+    return FixedPoint<SIZE, D, C>((D)dollars, (C)cents);
 }
 
-template <class D, class C, unsigned char SIZE>
-FixedPoint<D, C, SIZE> operator/(const FixedPoint<D, C, SIZE>& p1, const FixedPoint<D, C, SIZE>& p2)
+template <unsigned char SIZE, class D, class C>
+FixedPoint<SIZE, D, C> operator/(const FixedPoint<SIZE, D, C>& p1, const FixedPoint<SIZE, D, C>& p2)
 {
     long long d_p1 = p1.getDollars(), d_p2 = p2.getDollars();
     C c_p1 = p1.getCents(), c_p2 = p2.getCents();
 
     /*long long total = (((d_p1 * p1.m_maxCents+c_p1) * p1.m_maxCents)
             / (d_p2 *p2.m_maxCents+c_p2));
-    return FixedPoint<D, C, SIZE>(total / p1.m_maxCents,
+    return FixedPoint<SIZE, D, C>(total / p1.m_maxCents,
                              long(total) % p1.m_maxCents);*/
 
     long double total_p1 = d_p1 + static_cast<long double>(c_p1) / pow(p1.m_maxCents, 2);
     long double total_p2 = d_p2 + static_cast<long double>(c_p2) / pow(p2.m_maxCents, 2);
     long double total = total_p1 / total_p2;
-    return FixedPoint<D, C, SIZE>(floor(total),
+    return FixedPoint<SIZE, D, C>(floor(total),
                              static_cast<long>(total*p1.m_maxCents)%p1.m_maxCents);
 }
 
-template <class D, class C, unsigned char SIZE>
-FixedPoint<D, C, SIZE> operator%(const FixedPoint<D, C, SIZE>& p1, const FixedPoint<D, C, SIZE>& p2)
+template <unsigned char SIZE, class D, class C>
+FixedPoint<SIZE, D, C> operator%(const FixedPoint<SIZE, D, C>& p1, const FixedPoint<SIZE, D, C>& p2)
 {
     D d_p1 = p1.getDollars(), d_p2 = p2.getDollars();
     C c_p1 = p1.getCents(), c_p2 = p2.getCents();
 
     long long total = (d_p1 * p1.m_maxCents+c_p1)
                       % (d_p2 *p2.m_maxCents+c_p2);
-    return FixedPoint<D, C, SIZE>(total / p1.m_maxCents,
+    return FixedPoint<SIZE, D, C>(total / p1.m_maxCents,
                       total % p1.m_maxCents);
 }
 
-template <class D, class C, unsigned char SIZE>
-bool operator<(const FixedPoint<D, C, SIZE>& p1, const FixedPoint<D, C, SIZE>& p2)
+template <unsigned char SIZE, class D, class C>
+bool operator<(const FixedPoint<SIZE, D, C>& p1, const FixedPoint<SIZE, D, C>& p2)
 {
     if (p1.getDollars() < p2.getDollars())
         return true;
@@ -123,115 +123,115 @@ bool operator<(const FixedPoint<D, C, SIZE>& p1, const FixedPoint<D, C, SIZE>& p
     return false;
 }
 
-template <class D, class C, unsigned char SIZE>
-bool operator>(const FixedPoint<D, C, SIZE>& p1, const FixedPoint<D, C, SIZE>& p2)
+template <unsigned char SIZE, class D, class C>
+bool operator>(const FixedPoint<SIZE, D, C>& p1, const FixedPoint<SIZE, D, C>& p2)
 {
     return p2 < p1;
 }
 
-template <class D, class C, unsigned char SIZE>
-bool operator!=(const FixedPoint<D, C, SIZE>& p1, const FixedPoint<D, C, SIZE>& p2)
+template <unsigned char SIZE, class D, class C>
+bool operator!=(const FixedPoint<SIZE, D, C>& p1, const FixedPoint<SIZE, D, C>& p2)
 {
     return p1 < p2 || p2 < p1;
 }
 
-template <class D, class C, unsigned char SIZE>
-bool operator==(const FixedPoint<D, C, SIZE>& p1, const FixedPoint<D, C, SIZE>& p2)
+template <unsigned char SIZE, class D, class C>
+bool operator==(const FixedPoint<SIZE, D, C>& p1, const FixedPoint<SIZE, D, C>& p2)
 {
     return !(p1 != p2);
 }
 
-template <class D, class C, unsigned char SIZE>
-bool operator<=(const FixedPoint<D, C, SIZE>& p1, const FixedPoint<D, C, SIZE>& p2)
+template <unsigned char SIZE, class D, class C>
+bool operator<=(const FixedPoint<SIZE, D, C>& p1, const FixedPoint<SIZE, D, C>& p2)
 {
     return !(p1 > p2);
 }
 
-template <class D, class C, unsigned char SIZE>
-bool operator>=(const FixedPoint<D, C, SIZE>& p1, const FixedPoint<D, C, SIZE>& p2)
+template <unsigned char SIZE, class D, class C>
+bool operator>=(const FixedPoint<SIZE, D, C>& p1, const FixedPoint<SIZE, D, C>& p2)
 {
     return !(p1 < p2);
 }
 
 
-template <class D, class C, unsigned char SIZE>
-FixedPoint<D, C, SIZE>::FixedPoint(D dollars, C cent)
+template <unsigned char SIZE, class D, class C>
+FixedPoint<SIZE, D, C>::FixedPoint(D dollars, C cent)
 {
     this->m_maxCents = pow(10, SIZE);
     this->m_dollars = (dollars + cent/m_maxCents);
     this->m_cents = static_cast<C>(cent * pow(10, (SIZE - floor(log10(cent) + 1))))%m_maxCents;
 }
 
-template <class D, class C, unsigned char SIZE>
-FixedPoint<D, C, SIZE>& FixedPoint<D, C, SIZE>::operator+=(const FixedPoint<D, C, SIZE>& other){
+template <unsigned char SIZE, class D, class C>
+FixedPoint<SIZE, D, C>& FixedPoint<SIZE, D, C>::operator+=(const FixedPoint<SIZE, D, C>& other){
     *this = *this + other;
     return *this;
 }
 
-template <class D, class C, unsigned char SIZE>
-FixedPoint<D, C, SIZE>& FixedPoint<D, C, SIZE>::operator-=(const FixedPoint<D, C, SIZE>& other){
+template <unsigned char SIZE, class D, class C>
+FixedPoint<SIZE, D, C>& FixedPoint<SIZE, D, C>::operator-=(const FixedPoint<SIZE, D, C>& other){
     *this = *this - other;
     return *this;
 }
 
-template <class D, class C, unsigned char SIZE>
-FixedPoint<D, C, SIZE>& FixedPoint<D, C, SIZE>::operator*=(const FixedPoint<D, C, SIZE>& other){
+template <unsigned char SIZE, class D, class C>
+FixedPoint<SIZE, D, C>& FixedPoint<SIZE, D, C>::operator*=(const FixedPoint<SIZE, D, C>& other){
     *this = *this * other;
     return *this;
 }
 
-template <class D, class C, unsigned char SIZE>
-FixedPoint<D, C, SIZE>& FixedPoint<D, C, SIZE>::operator/=(const FixedPoint<D, C, SIZE>& other){
+template <unsigned char SIZE, class D, class C>
+FixedPoint<SIZE, D, C>& FixedPoint<SIZE, D, C>::operator/=(const FixedPoint<SIZE, D, C>& other){
     *this = *this / other;
     return *this;
 }
 
-template <class D, class C, unsigned char SIZE>
-FixedPoint<D, C, SIZE>& FixedPoint<D, C, SIZE>::operator%=(const FixedPoint<D, C, SIZE>& other){
+template <unsigned char SIZE, class D, class C>
+FixedPoint<SIZE, D, C>& FixedPoint<SIZE, D, C>::operator%=(const FixedPoint<SIZE, D, C>& other){
     *this = *this % other;
     return *this;
 }
 
-template <class D, class C, unsigned char SIZE>
-FixedPoint<D, C, SIZE> &FixedPoint<D, C, SIZE>::operator-() {
-    return *FixedPoint<D, C, SIZE>(this->m_dollars*-1, this->m_cents*-1,
+template <unsigned char SIZE, class D, class C>
+FixedPoint<SIZE, D, C> &FixedPoint<SIZE, D, C>::operator-() {
+    return *FixedPoint<SIZE, D, C>(this->m_dollars*-1, this->m_cents*-1,
             this->m_maxCents);
 }
 
-template <class D, class C, unsigned char SIZE>
-FixedPoint<D, C, SIZE> &FixedPoint<D, C, SIZE>::operator++() {
+template <unsigned char SIZE, class D, class C>
+FixedPoint<SIZE, D, C> &FixedPoint<SIZE, D, C>::operator++() {
     ++this->m_dollars;
     return *this;
 }
 
-template <class D, class C, unsigned char SIZE>
-const FixedPoint<D, C, SIZE> FixedPoint<D, C, SIZE>::operator++(int) {
-    FixedPoint<D, C, SIZE> tmp = *this;
+template <unsigned char SIZE, class D, class C>
+const FixedPoint<SIZE, D, C> FixedPoint<SIZE, D, C>::operator++(int) {
+    FixedPoint<SIZE, D, C> tmp = *this;
     ++this->m_dollars;
     return tmp;
 }
 
 
-template <class D, class C, unsigned char SIZE>
-FixedPoint<D, C, SIZE> &FixedPoint<D, C, SIZE>::operator--() {
+template <unsigned char SIZE, class D, class C>
+FixedPoint<SIZE, D, C> &FixedPoint<SIZE, D, C>::operator--() {
     --this->m_dollars;
     return *this;
 }
 
-template <class D, class C, unsigned char SIZE>
-const FixedPoint<D, C, SIZE> FixedPoint<D, C, SIZE>::operator--(int) {
-    FixedPoint<D, C, SIZE> tmp = *this;
+template <unsigned char SIZE, class D, class C>
+const FixedPoint<SIZE, D, C> FixedPoint<SIZE, D, C>::operator--(int) {
+    FixedPoint<SIZE, D, C> tmp = *this;
     --this->m_dollars;
     return tmp;
 }
 
-template <class D, class C, unsigned char SIZE>
-FixedPoint<D, C, SIZE>::operator double() const {
+template <unsigned char SIZE, class D, class C>
+FixedPoint<SIZE, D, C>::operator double() const {
     return m_dollars + static_cast<double>(m_cents)/m_maxCents;
 }
 
-template <class D, class C, unsigned char SIZE>
-FixedPoint<D, C, SIZE> &FixedPoint<D, C, SIZE>::operator=(int dollars) {
+template <unsigned char SIZE, class D, class C>
+FixedPoint<SIZE, D, C> &FixedPoint<SIZE, D, C>::operator=(int dollars) {
     this->m_dollars = dollars;
     this->m_cents = 0;
     return *this;
