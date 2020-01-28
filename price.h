@@ -69,12 +69,16 @@ Price<D, C, SIZE> operator-(const Price<D, C, SIZE>& p1, const Price<D, C, SIZE>
 template <class D, class C, unsigned char SIZE>
 Price<D, C, SIZE> operator*(const Price<D, C, SIZE>& p1, const Price<D, C, SIZE>& p2)
 {
+    C maxCents = p1.m_maxCents;
     long long d_p1 = p1.getDollars(), d_p2 = p2.getDollars();
     long long c_p1 = p1.getCents(), c_p2 = p2.getCents();
 
-    long long dollars = (d_p1 * d_p2) + (d_p1 * c_p2 + d_p2 * c_p1)/p1.m_maxCents;
-    long long cents = ((c_p1 * c_p2)/p1.m_maxCents + d_p1 * c_p2 + d_p2 * c_p1)%p1.m_maxCents;
+    std::cout << c_p1 << " " << c_p2 << std::endl;
 
+    long long dollars = (d_p1 * d_p2);
+
+    long long cents = static_cast<long long>((c_p1 * c_p2)/maxCents + d_p1 * c_p2 + d_p2 * c_p1);
+    std::cout << dollars << " " << cents << std::endl;
     return Price<D, C, SIZE>((D)dollars, (C)cents);
 }
 
@@ -89,11 +93,11 @@ Price<D, C, SIZE> operator/(const Price<D, C, SIZE>& p1, const Price<D, C, SIZE>
     return Price<D, C, SIZE>(total / p1.m_maxCents,
                              long(total) % p1.m_maxCents);*/
 
-    long double total_p1 = d_p1 + static_cast<long double>(c_p1) / p1.m_maxCents;
-    long double total_p2 = d_p2 + static_cast<long double>(c_p2) / p2.m_maxCents;
+    long double total_p1 = d_p1 + static_cast<long double>(c_p1) / pow(p1.m_maxCents, 2);
+    long double total_p2 = d_p2 + static_cast<long double>(c_p2) / pow(p2.m_maxCents, 2);
     long double total = total_p1 / total_p2;
     return Price<D, C, SIZE>(floor(total),
-                             long(total*p1.m_maxCents)%p1.m_maxCents);
+                             static_cast<long>(total*p1.m_maxCents)%p1.m_maxCents);
 }
 
 template <class D, class C, unsigned char SIZE>
@@ -155,7 +159,7 @@ Price<D, C, SIZE>::Price(D dollars, C cent)
 {
     this->m_maxCents = pow(10, SIZE);
     this->m_dollars = (dollars + cent/m_maxCents);
-    this->m_cents = cent%m_maxCents;
+    this->m_cents = static_cast<C>(cent * pow(10, (SIZE - floor(log10(cent) + 1))))%m_maxCents;
 }
 
 template <class D, class C, unsigned char SIZE>

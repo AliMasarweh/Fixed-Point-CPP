@@ -89,7 +89,22 @@ TEST(PriceAdvancedOperatorsTests, PriceRealNumersMultiplications)
     stringstream ss2;
     ss2 << completeNumbersMulResult << "." << afterCommaMulResult << "$";
     ASSERT_EQ(ss.str(), ss2.str());
+
+    Price<int, long long, 4> p3(0, 25);
+    Price<int, long long, 4> p4(0, 25);
+
+    ss.clear();
+    ss2.clear();
+
+    ss << (p3*p4);
+
+    completeNumbersMulResult = 0;
+    afterCommaMulResult = 625;
+
+    ss2 << completeNumbersMulResult << ".0" << afterCommaMulResult << "$";
+    ASSERT_EQ(ss.str(), ss2.str());
 }
+
 
 TEST(PriceAdvancedOperatorsTests, PriceDivisionAccuracy)
 {
