@@ -6,9 +6,6 @@
 #define FIXEDPOINTPRICE_PRICE_H
 
 template <class D, class C>
-class Price;
-
-template <class D, class C>
 class Price{
     friend std::ostream &operator<<(std::ostream &os, const Price<D, C> &p) {
         std::string padding = "";

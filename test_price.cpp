@@ -54,7 +54,6 @@ TEST(PriceBasicOperatorsTests, PriceArthimiticsWithoutAssigning)
 {
     Price<int, char> p1(1);
     Price<int, char> p2(2);
-    stringstream ss;
     ASSERT_EQ(p1 + (Price<int, char>(2)), (Price<int, char>(1)) + p2);
     ASSERT_EQ(p1 * (Price<int, char>(2)), p2);
     ASSERT_EQ(p2 / (Price<int, char>(2)), p2 - (Price<int, char>(1)));

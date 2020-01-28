@@ -4,3 +4,5 @@
 **.gch
 main.cpp
 test_price
+CMakeCache.txt
+**/lib
