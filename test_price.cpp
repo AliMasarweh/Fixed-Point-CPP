@@ -71,17 +71,17 @@ TEST(PriceAdvancedOperatorsTests, PriceBigNumberMultiplications)
     unsigned long long bigNumbersMulResult = 9 * pow(10, 18);
 
     stringstream ss2;
-    ss2 << bigNumbersMulResult << "$";
+    ss2 << bigNumbersMulResult << ".00$";
     ASSERT_EQ(ss.str(), ss2.str());
 }
 
 TEST(PriceAdvancedOperatorsTests, PriceDivisionAccuracy)
 {
-    Price<int, int, 8> p1(22);
-    Price<int, int, 8> p2(7);
+    Price<long, long, 10> p1(22);
+    Price<long, long, 10> p2(7);
 
     stringstream ss;
     ss << (p1/p2);
 
-    ASSERT_EQ(ss.str(), "3.14285714$");
+    ASSERT_EQ(ss.str(), "3.1428571428$");
 }
