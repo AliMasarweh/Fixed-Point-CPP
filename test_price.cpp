@@ -93,10 +93,13 @@ TEST(FixedPointAdvancedOperatorsTests, FixedPointRealNumersMultiplications)
     FixedPoint<4, int, long long> p3(0, 25);
     FixedPoint<4, int, long long> p4(0, 25);
 
+    ss.str("");
+    ss2.str("");
     ss.clear();
     ss2.clear();
 
-    ss << (p3*p4);
+    FixedPoint<4, int, long long> p5 = p3*p4;
+    ss << p5;
 
     completeNumbersMulResult = 0;
     afterCommaMulResult = 625;

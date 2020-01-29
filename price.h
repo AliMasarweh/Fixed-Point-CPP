@@ -6,66 +6,11 @@
 #define FIXEDPOINTPRICE_PRICE_H
 
 #include <cmath>
-
-
-namespace numbersSpeller
-{
-    const char* smallNumbers[] = {
-            "zero", "one", "two", "three", "four", "five",
-            "six", "seven", "eight", "nine", "ten",
-            "eleven", "twelve", "thirteen", "fourteen", "fifteen",
-            "sixteen", "seventeen", "eighteen", "nineteen"
-    };
-
-    std::string spellHundreds(unsigned n) {
-        std::string res;
-        if (n > 99) {
-            res = smallNumbers[n/100];
-            res += " hundred";
-            n %= 100;
-            if (n) res += " and ";
-        }
-        if (n >= 20) {
-            static const char* Decades[] = {
-                    "", "", "twenty", "thirty", "forty",
-                    "fifty", "sixty", "seventy", "eighty", "ninety"
-            };
-            res += Decades[n/10];
-            n %= 10;
-            if (n) res += "-";
-        }
-        if (n < 20 && n > 0)
-            res += smallNumbers[n];
-        return res;
-    }
-
-
-    const char* thousandPowers[] = {
-            " billion", " million",  " thousand", "" };
-
-    typedef unsigned long Spellable;
-
-    std::string spell(Spellable n) {
-        if (n < 20) return smallNumbers[n];
-        std::string res;
-        const char** pScaleName = thousandPowers;
-        Spellable scaleFactor = 1000000000;	// 1 billion
-        while (scaleFactor > 0) {
-            if (n >= scaleFactor) {
-                Spellable h = n / scaleFactor;
-                res += spellHundreds(h) + *pScaleName;
-                n %= scaleFactor;
-                if (n) res += ", ";
-            }
-            scaleFactor /= 1000;
-            ++pScaleName;
-        }
-        return res;
-    }
-}
+#include "numbersSpeller.h"
 
 template <unsigned char SIZE, class D = int, class C = int>
 class FixedPoint{
+
     friend std::ostream &operator<<(std::ostream &os, const FixedPoint<SIZE, D, C> &p) {
         C tmpToPadZeros = p.m_cents != 0? p.m_cents : 1;
 
@@ -82,6 +27,7 @@ class FixedPoint{
 
 public:
     explicit FixedPoint(D dollars = 0, C cents = 0);
+    FixedPoint(D dollars, C cents, unsigned char rightLeft);
     D getDollars() const { return m_dollars; }
     C getCents() const { return m_cents; }
 
@@ -112,6 +58,7 @@ public:
 private:
     D m_dollars;
     C m_cents;
+    unsigned char rightZeroPadding;
 };
 
 
@@ -132,14 +79,17 @@ FixedPoint<SIZE, D, C> operator-(const FixedPoint<SIZE, D, C>& p1, const FixedPo
 template <unsigned char SIZE, class D, class C>
 FixedPoint<SIZE, D, C> operator*(const FixedPoint<SIZE, D, C>& p1, const FixedPoint<SIZE, D, C>& p2)
 {
-    C maxCents = p1.m_maxCents;
+    D maxCents = p1.m_maxCents;
     long long d_p1 = p1.getDollars(), d_p2 = p2.getDollars();
     long long c_p1 = p1.getCents(), c_p2 = p2.getCents();
 
     long long dollars = (d_p1 * d_p2);
 
     long long cents = static_cast<long long>((c_p1 * c_p2)/maxCents + d_p1 * c_p2 + d_p2 * c_p1);
-    return FixedPoint<SIZE, D, C>((D)dollars, (C)cents);
+
+    unsigned char leftShifting = SIZE - log10(cents%maxCents);
+
+    return FixedPoint<SIZE, D, C>((D)dollars, (C)cents, leftShifting);
 }
 
 template <unsigned char SIZE, class D, class C>
@@ -215,11 +165,23 @@ bool operator>=(const FixedPoint<SIZE, D, C>& p1, const FixedPoint<SIZE, D, C>& 
 
 
 template <unsigned char SIZE, class D, class C>
-FixedPoint<SIZE, D, C>::FixedPoint(D dollars, C cent)
+FixedPoint<SIZE, D, C>::FixedPoint(D dollars, C cents)
 {
     this->m_maxCents = pow(10, SIZE);
-    this->m_dollars = (dollars + cent/m_maxCents);
-    this->m_cents = static_cast<C>(cent * pow(10, (SIZE - floor(log10(cent?cent:1) + 1))))%m_maxCents;
+    this->m_dollars = (dollars + cents/m_maxCents);
+    this->rightZeroPadding = 0;
+    cents %= m_maxCents;
+    this->m_cents = static_cast<C>(cents * pow(10, (SIZE - floor(log10(cents?cents:1) + 1))))%m_maxCents;
+}
+
+template <unsigned char SIZE, class D, class C>
+FixedPoint<SIZE, D, C>::FixedPoint(D dollars, C cents, unsigned char rightLeft)
+{
+    this->m_maxCents = pow(10, SIZE);
+    this->m_dollars = (dollars + cents/m_maxCents);
+    cents %= m_maxCents;
+    this->rightZeroPadding = SIZE - floor(log10(cents?cents:1) + 1 + rightLeft);
+    this->m_cents = static_cast<C>(cents * pow(10, this->rightZeroPadding))%m_maxCents;
 }
 
 template <unsigned char SIZE, class D, class C>
@@ -309,7 +271,7 @@ std::string FixedPoint<SIZE, D, C>::digitsToWords(const std::string str, std::si
     std::stringstream ss;
     D toNumber;
     ss >> toNumber;
-    return numbersSpeller::spell(std::atoi(str.substr(startIndex, endIndex).c_str()));
+    return NumbersSpeller::spell(std::atoi(str.substr(startIndex, endIndex).c_str()));
 }
 
 template<unsigned char SIZE, class D, class C>
