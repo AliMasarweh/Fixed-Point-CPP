@@ -12,7 +12,7 @@ template <unsigned char SIZE, class D = int, class C = int>
 class FixedPoint{
 
     friend std::ostream &operator<<(std::ostream &os, const FixedPoint<SIZE, D, C> &p) {
-        C tmpToPadZeros = (p.m_cents != 0? p.m_cents : 1)*10;
+        D tmpToPadZeros = (p.m_cents != 0? p.m_cents : 1)*10;
 
         os << p.m_dollars << '.';
 
