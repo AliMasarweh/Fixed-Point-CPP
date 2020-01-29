@@ -12,11 +12,11 @@ template <unsigned char SIZE, class D = int, class C = int>
 class FixedPoint{
 
     friend std::ostream &operator<<(std::ostream &os, const FixedPoint<SIZE, D, C> &p) {
-        C tmpToPadZeros = p.m_cents != 0? p.m_cents : 1;
+        C tmpToPadZeros = (p.m_cents != 0? p.m_cents : 1)*10;
 
         os << p.m_dollars << '.';
 
-        while(tmpToPadZeros < SIZE) {
+        while(tmpToPadZeros < p.m_maxCents) {
             os << "0";
             tmpToPadZeros *= 10;
         }
@@ -26,6 +26,8 @@ class FixedPoint{
     }
 
 public:
+    typedef D theTypeD;
+    typedef C theTypeC;
     explicit FixedPoint(D dollars = 0, C cents = 0);
     FixedPoint(D dollars, C cents, unsigned char rightLeft);
     D getDollars() const { return m_dollars; }

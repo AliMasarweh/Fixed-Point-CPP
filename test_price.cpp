@@ -138,3 +138,10 @@ TEST(FixedPointMakeMoney, FixedPointMakeMoneyBasic)
     ASSERT_EQ(p6.makeMoney(),"one hundred and twenty-four million, four hundred and ninety-five thousand, one hundred and sixty-nine dollars and twenty-seven cents");
     ASSERT_EQ(p7.makeMoney(),"two billion, twenty million, four hundred and ninety-five thousand, one hundred and sixty-nine dollars and twenty-seven cents");
 }
+
+TEST(FixedPointTypeDefining, OneTypeDefinig)
+{
+    FixedPoint<4, long, long>::theTypeC p;
+    FixedPoint<4, long>::theTypeC p2;
+
+}
