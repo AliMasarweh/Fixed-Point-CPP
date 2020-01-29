@@ -127,12 +127,11 @@ TEST(FixedPointMakeMoney, FixedPointMakeMoneyBasic)
     FixedPoint<2> p6(124495169, 27);
     FixedPoint<2> p7(2020495169, 27);
 
-    ASSERT_EQ(p1.makeMoney(), "twenty two dollars and sixteen cents");
-    ASSERT_EQ(p2.makeMoney(), "one thousand nine hundred, fourty six dollars and fourty six cents");
-    ASSERT_EQ(p3.makeMoney(), "one hundrend nineteen thousand one hundred, ninety four dollars and seventy eight cents");
-    ASSERT_EQ(p4.makeMoney(), "two thousand seven hundred, seventy two dollars and eighteen cents");
-    ASSERT_EQ(p5.makeMoney(), "sixty four cents");
-    cout << p6 << endl;
-    ASSERT_EQ(p6.makeMoney(),"one hundrend twenty four million, four hunderend ninty five, one hundrend and sixty nine");
-
+    ASSERT_EQ(p1.makeMoney(), "twenty-two dollars and sixteen cents");
+    ASSERT_EQ(p2.makeMoney(), "one thousand, nine hundred and forty-six dollars and forty-six cents");
+    ASSERT_EQ(p3.makeMoney(), "one hundred and nineteen thousand, one hundred and ninety-four dollars and seventy-eight cents");
+    ASSERT_EQ(p4.makeMoney(), "two thousand, seven hundred and seventy-two dollars and eighteen cents");
+    ASSERT_EQ(p5.makeMoney(), "sixty-four cents");
+    ASSERT_EQ(p6.makeMoney(),"one hundred and twenty-four million, four hundred and ninety-five thousand, one hundred and sixty-nine dollars and twenty-seven cents");
+    ASSERT_EQ(p7.makeMoney(),"two billion, twenty million, four hundred and ninety-five thousand, one hundred and sixty-nine dollars and twenty-seven cents");
 }
